@@ -1,267 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Military Loadout Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            text-align: center;
+            background-color: #121212;
+            color: #f0f0f0;
+        }
+
+        h1 {
+            font-size: 36px;
+        }
+
+        select, button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: #333;
+            color: #f0f0f0;
+            border: none;
+        }
+
+        #loadout {
+            margin-top: 30px;
+            font-size: 22px;
+            line-height: 1.6;
+        }
+
+        img {
+            width: 100%;
+            max-width: 400px;
+            display: block;
+            margin: 20px auto;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Glockodile's Random Military Loadout Generator</h1>
+
+    <img src="assets/military.gif" alt="Military GIF">
+
+    <label for="faction">Choose Faction:</label>
+    <br>
+    <select id="faction">
+        <option value="Western">Western</option>
+        <option value="Soviet">Soviet/Russian</option>
+        <option value="All">All Factions</option>
+    </select>
+    <br>
+
+    <label for="class">Choose Class:</label>
+    <br>
+    <select id="class">
+        <option value="Sniper">Sniper</option>
+        <option value="MachineGunner">Machine Gunner</option>
+        <option value="Rifleman">Rifleman</option>
+        <option value="Grenadier">Grenadier</option>
+        <option value="AntiTank">Anti-Tank</option>
+        <option value="Tanker">Tanker</option>
+    </select>
+    <br>
+
+    <button onclick="generateLoadout()">Generate Loadout</button>
+
+    <div id="loadout"></div>
+
 <script>
     const helmets = {
         Western: [
-            // United States
-            "M1C Paratrooper Helmet", "PASGT Kevlar (1985)", "DH-132 Helicopter Crew", 
-            // United Kingdom
-            "MK IV Composite Helmet", "GSMK6 (Early SAS)", 
-            // Germany
-            "M62 Stahlhelm (BGS)", "Schuberth B826 (GSG-9)", 
-            // France
-            "SPECTRA-SERAT (1989)", "Mle 1951 NATO", 
-            // Italy
-            "Casco Mod.33/39 (Repurposed)", "TNO-890 Paratrooper", 
-            // Scandinavia
-            "Norwegian M58", "Swedish M26/65",
-            // Asia-Pacific
-            "Type 66 (Japan)", "Australian M1 Modified"
+            "M1 Helmet", "PASGT Helmet", "MICH TC-2000", "MK6 Helmet", 
+            "SPECTRA Helmet", "SSh-68 (Captured)", "Brodie Helmet (Reserve)",
+            "Pro-Tec Skate Helmet (SF)", "Rhino II Paratrooper Helmet",
+            "CGF Combat Helmet (Canada)", "M92 Helmet (Germany)"
         ],
         Soviet: [
-            // USSR
-            "SSh-68M (Afghan War Mod)", "LShZ-1-81 (Spetsnaz)", 
-            // Warsaw Pact
-            "Polish Wz.67 Hełm", "Czech Vz.53/90", 
-            "East German M56/76", "Romanian M73", 
-            // Asian Allies
-            "Chinese GK80", "North Korean M68", 
-            "Vietnamese Pith Helmet (Tropicalized)",
-            // Specialized
-            "ZSH-3-4 (Helicopter Crew)", "K6-3 Altyn (1981 Prototype)"
+            "SSh-40", "SSh-60", "SSh-68", "ZSH-1-2M", "6B6 Helmet",
+            "Tanker Helmet TK-3", "VZM-1 Paratrooper Helmet",
+            "KZS-2 Fiberglass Helmet", "Altyn (Early Prototype)",
+            "Czech M53 Helmet", "Polish Wz.50"
         ]
     };
 
     const armor = {
         Western: [
-            // United States
-            "M1955 Flak Vest (Nylon)", "RBA (Ranger Body Armor 1987)", 
-            "IBA with SAPIs (2000)", 
-            // Europe
-            "Dutch PAGST Vest", "Spanish C-100", 
-            "Swedish KFF-2 Frag Vest", 
-            // Specialized
-            "SAS Pattern 90 Smock (Reinforced)", "FAPC (French Airborne)", 
-            "Rhodesian Fireforce Chest Rig", "South African M83"
+            "M1952A Flak Vest", "PASGT Vest", "RBA Vest (UK)", 
+            "IBA (Interceptor) Early Version", "SAS Smock (Reinforced)",
+            "German KSK Splinter Vest", "French Gilet Para",
+            "USMC PACA (1980s)", "ALICE Webbing System",
+            "Israeli RZ 76-1 Vest"
         ],
         Soviet: [
-            // USSR
-            "6B3 Zh-85M (Afghan Mod)", "6B4 Titanium Plates", 
-            "ChZh-78 Afghanets Chest Rig", 
-            // Eastern Bloc
-            "Polish Kamizelka M89", "East German Schützenschnur", 
-            "Bulgarian M72 Flak Jacket", 
-            // Asian Allies
-            "Chinese Type 56 Bandolier", "North Korean Pochonbo Vest", 
-            "Viet Cong Bamboo Armor (Captured)", 
-            // Specialized
-            "KGB 3B1 Bulletproof Suit", "Vympel Assault Harness"
+            "6B2 Vest", "6B3 Zh-85", "6B5-15", "ChZh-81 Chest Rig",
+            "Soviet SN-42 (Surplus)", "Bulgarian Breastplate M1972",
+            "Polish Kamizelka Wz.89", "East German Kampfweste",
+            "Czech VZ.53", "Hungarian M59 Flak Jacket"
         ]
     };
 
     const primaryWeapons = {
         Western: {
             Sniper: [
-                "M40A3 (USMC)", "L96A1 Arctic Warfare", "FR-F2 (France)", 
-                "HK MSG-90", "M21 with ART II Scope", "M76 Sniper (Yugoslav)", 
-                "TRW Low Maintenance Rifle", "M14 National Match", 
-                "Steyr-Mannlicher SSG-PII (1989)", "PGM Hecate II (1993)"
+                "M21 Sniper Weapon System", "M40A1", "M24", "HK PSG1", 
+                "Walther WA 2000", "FR-F1 (France)", "L42A1 Enfield",
+                "Sako TRG-21", "Steyr SSG 69", "M14 Sniper Variant"
             ],
             MachineGunner: [
-                "M60E3 (Lightweight)", "HK11A1", "FN MAG-58 (Para Model)", 
-                "Bren L4A4 (Sterling Conversion)", "Ares Shrike 5.56", 
-                "Stoner 86 (LMG Configuration)", "Ultimax 100 Mk2", 
-                "Beretta AS70/90", "Sumitomo NTK-62 (Japan)", 
-                "Vektor SS-77 (South Africa)"
+                "M60", "M249 (Early Model)", "FN MAG", "Bren L4", 
+                "MG3 (West German)", "Stoner 63", "M1919A6 (Reserve)",
+                "HK21", "Ultimax 100 (Early Model)", "AAT-52 (France)"
             ],
             Rifleman: [
-                // NATO Standard
-                "M16A2 with A1 Upper", "FN CAL (5.56 FAL)", 
-                "Beretta AR70/90", "SIG SG 550 Sniper", 
-                // Cold War Specials
-                "IMI Galil ARM (Eagle Stock)", "Daewoo K1A (Korea)", 
-                "L2A1 (British FAL)", "SAR-80 (Singapore)", 
-                "Vz.58 (Canadian Trials)", "FA-MAS Type F1 (Bayonet Cutout)", 
-                // Obscure Designs
-                "Armalite AR-18 (IRA Configuration)", "Ruger AC-556", 
-                "Leader Dynamics T2 Mk5 (Australia)", "Norinco CQ (Chinese M16 Copy)"
+                "M16A1", "M16A2", "FN FAL", "G3A3", "Steyr AUG A1",
+                "L1A1 SLR", "Beretta AR70", "SIG SG 542",
+                "IMI Galil ARM", "Daewoo K2", "M14", "M1 Garand (Reserve)",
+                "H&K G41", "FAMAS F1", "CETME Model L"
             ],
             Grenadier: [
-                "M16A2 with M203PI", "HK79 Underbarrel Launcher", 
-                "FN FNC with GL-1", "Arwen 37 (Riot Control)", 
-                "China Lake Pump-Action GL", "RGA-86 (Rhodesian)"
+                "M16A1 with M203", "M79 Thumper", "HK69A1",
+                "FN FALO with Energa", "M1A1 Carbine with M8 Launcher",
+                "L1A1 with SUIT Sight", "BM-59 with GL"
             ],
             AntiTank: [
-                "M202 FLASH (Incendiary)", "Armbrust (Recoilless)", 
-                "B-300 (Israeli)", "M20 Recoilless Rifle", 
-                "MILAN 2 ATGM", "BGM-71D TOW II"
+                "M3A1 Grease Gun", "Sterling L2A3", "Carl Gustaf M2",
+                "M20 Super Bazooka", "M67 Recoilless Rifle",
+                "LAW 80 (UK)", "MATADOR (Early Model)"
             ],
             Tanker: [
-                "Ingram MAC-10", "Spectre M4 (Italy)", 
-                "Walther MP-L", "Franchi LF-57", 
-                "Steyr MPi 69 (Compact)", "Enfield L2A3 Sterling"
+                "M3 Grease Gun", "Sterling SMG", "Uzi", "MAC-10",
+                "Beretta M12", "S&W 76", "M1 Carbine (Tanker Model)"
             ]
         },
         Soviet: {
             Sniper: [
-                "SVU-A (Bullpup SVD)", "OTs-03 SVU (1991)", 
-                "VSSK Vychlop (Silenced .50)", "KSVK 12.7mm", 
-                "Zastava M91 (Yugoslavia)", "PSL with LPS Scope", 
-                "Type 79 (Chinese SVD)", "Romanian FPK"
+                "SVD Dragunov", "SV-98", "VSS Vintorez", "Mosin Nagant PU",
+                "PSL (Romak-3)", "KSVK 12.7mm", "Tabuk Sniper (Iraq)",
+                "Zastava M76", "SWD-M (China)"
             ],
             MachineGunner: [
-                "AEK-999 Badger (PKM Mod)", "UKM-2000P (Polish PKM)", 
-                "Type 67 (Chinese RPD)", "KPV Mounted HMG", 
-                "RPK-74 with Drum Mag", "Pecheneg Bullpup Prototype", 
-                "Hungarian AMD-65M", "Czech UK vz.59"
+                "PKM", "RPK-74", "RPD", "DP-28 (Reserve)", "SG-43 Gorunov",
+                "UKM-2000 (Polish)", "KPV Heavy MG", "NSV Utyos"
             ],
             Rifleman: [
-                // AK Variants
-                "AK-74N with NSPU Night Sight", "AKM Shorty (Krinkov Prototype)", 
-                "AKS-74UB (Integrated Suppressor)", "Type 56-1 (Chinese)", 
-                "MPi-KM (East German)", "Wz. 88 Tantal (5.45mm Poland)", 
-                // Experimental
-                "AO-63 Double Barrel AK", "TKB-0146 Bullpup", 
-                "AL-7 (5.45mm Prototype)", "AN-94 (Limited Production)", 
-                // Allied Designs
-                "Vz.58 (Czech)", "PM md.63 (Romania)", 
-                "M70B1 (Yugoslavia)", "North Korean Type 68", 
-                // Specialized
-                "AS Val (VSS Integrated)", "OTs-12 Tiss (Compact)"
+                "AKM", "AK-74", "AKS-74U", "AK-47 Type 3", "AMD-65",
+                "PM md. 63/65 (Romania)", "Wz. 88 Tantal (Poland)",
+                "Norinco Type 56", "Vz. 58 (Czech)", "MPi-KMS (East Germany)",
+                "AK-74N (Night Vision)", "AN-94 Abakan (Prototype)",
+                "TKB-022PM (Experimental)", "AS Val (1980s)"
             ],
             Grenadier: [
-                "GP-25 underbarrel (40mm)", "RPG-27 TAVOR (Disposable)", 
-                "AGS-30 Automatic GL", "RGM-40 Kastet", 
-                "BS-1 Tishina Silent GL", "DP-64 Anti-Diver"
+                "AKM with GP-25", "AK-74 with GP-30", "RPG-75",
+                "RPG-18 Mukha", "AGS-17 Plamya", "RG-6 Revolver Grenade Launcher"
             ],
             AntiTank: [
-                "9M113 Konkurs ATGM", "RPG-29 "Vampir"", 
-                "SPG-9D Light Recoilless", "9K111M Faktoriya", 
-                "RPG-16 "Striker"", "B-10M Recoilless Rifle"
+                "RPG-7V", "RPG-16", "SPG-9", "9K111 Fagot", 
+                "9M14 Malyutka", "RPG-29 Vampir (Prototype)",
+                "B-10 Recoilless Rifle"
             ],
             Tanker: [
-                "PP-90M1 (Collapsible)", "APS Underwater Pistol", 
-                "OTs-33 Pernach", "PP-93 (Compact)", 
-                "Stechkin with Stock", "Vz.61 Skorpion"
+                "APS Stechkin", "PPSh-41 (Reserve)", "PP-91 KEDR",
+                "AKS-74U", "OTs-02 Kiparis", "PP-19 Bizon (Early Model)"
             ]
         }
     };
 
     const secondaryWeapons = {
         Western: [
-            // Revolvers
-            "Colt Trooper Mk III", "S&W Model 10 (Victory Model)", 
-            "Manurhin MR-73 (France)", "Charter Arms Bulldog", 
-            // Cold War Autos
-            "Beretta 93R (Burst Fire)", "H&K P7M13", 
-            "Walther P5 Compact", "Steyr GB (Gas Seal)", 
-            "AMT Hardballer Longslide", "LAR Grizzly Win Mag", 
-            // Specialized
-            "H&K P11 Underwater", "Gyrojet Rocket Pistol (Trials)"
+            "M1911A1", "Browning Hi-Power", "Walther P38", "S&W Model 29",
+            "Beretta 92FS", "Colt Python", "Luger P08 (Reserve)",
+            "Webley Mk IV (Reserve)", "Makarov PM (Captured)", 
+            "SIG P220", "CZ 75", "FN Browning GP35"
         ],
         Soviet: [
-            // Military Sidearms
-            "PB Silent (6P9)", "APB (Auto Pistol)", 
-            "OTs-35 "Gnom" (Compact)", "PSM (5.45mm)", 
-            "MP-445 "Varyag"", "TP-82 Survival (Cosmonauts)", 
-            // Allied Designs
-            "CZ 52 (Czech)", "P-83 Wanad (Poland)", 
-            "M70 (Yugoslavia)", "Type 64 Silenced (China)", 
-            // Experimental
-            "OTs-23 Drotik (5.45mm)", "GSH-18 (1998 Prototype)"
+            "Makarov PM", "Tokarev TT-33", "Stechkin APS", 
+            "P-64 (Poland)", "CZ 82 (Czech)", "FEG PA-63 (Hungary)",
+            "APS Underwater Pistol", "Nagant M1895", "PB Silent Pistol",
+            "GSh-18 (Prototype)", "MP-448 Skyph"
         ]
     };
 
     const grenades = {
         Western: [
-            "M34 WP Smoke", "V40 Mini-Frag", "M7A3 CS Gas", 
-            "L1A1 White Phosphorus", "No.80 "Gammon Bomb"", 
-            "HG 85 Offensive", "PRB 424 (Belgian)", 
-            "RGD-60 (Captured Warsaw Pact)"
+            "M67 Frag", "M26 Pineapple", "M18 Smoke (Colored)", 
+            "AN-M14 Incendiary", "V40 Mini-Grenade",
+            "L2A2 (UK)", "HG85 (Swiss)", "DM41 (Germany)"
         ],
         Soviet: [
-            "RGD-2 (Egg Grenade)", "RKG-3M HEAT", 
-            "RDG-5 "Katyusha" Smoke", "GH-15 "Zarya" Flash", 
-            "Kh-50 Incendiary", "FAB-50 Practice", 
-            "Type 59 (Chinese Copy)", "UG-84 Training"
+            "RGD-5", "F1", "RKG-3 Anti-Tank", "RDG-2 Smoke",
+            "GH-2 Flashbang", "Zarya Stun", "Model 1914 (Reserve)"
         ]
     };
 
     const gadgets = {
         Western: [
-            "AN/PAS-13 Thermal (1999)", "AN/PRC-119 SINCGARS", 
-            "PLGR GPS (1991)", "MIL-STD-1913 Rail System", 
-            "Hawk MM-1 Grenade System", "M9 E-Tool (Folding)", 
-            "Starlight Scope (AN/PVS-2)", "XM29 OICW Prototype", 
-            "KAC ChainSAW Grip", "SOPMOD Block 0 Kit (1999)"
+            "AN/PVS-4 Night Sight", "PLCE Webbing", "STANO Scope",
+            "PRC-77 Radio", "GSA-1 Geiger Counter", "M9 Bayonet",
+            "KAC Masterkey", "MILAN CLU", "PEQ-2 IR Laser",
+            "SDU-5/E Flare Pistol"
         ],
         Soviet: [
-            "1PN34 Thermal Sight", "R-159M Battlefield Radio", 
-            "1PN58 Night Vision Monocular", "PBS-1 Suppressor Kit", 
-            "TP-82 Triple-Barrel Survival", "PNK-4 Tanker Sights", 
-            "KDS-2 "Strela" Laser Designator", "GSH-7-30 Aircraft Cannon (Ground Use)", 
-            "TNA-3 Land Navigation Kit", "SP-4 Silent Cartridges"
+            "1PN58 Night Vision", "R-105M Radio", "DPV-1 Geiger Counter",
+            "NSPU Night Scope", "6Kh4 Bayonet", "TP-82 Cosmonaut Pistol",
+            "TNA-3 Navigation Kit", "SP-4 Silent Ammo Pouch"
         ]
     };
 
     const clothes = {
         Western: [
-            // European Patterns
-            "Italian "Smoke" Pattern", "Portuguese Vertical Lizards", 
-            "Swedish M90 Splinter", "Greek "Lizard"", 
-            // US Patterns
-            "Night Desert (Chocolate Chip)", "ERDL Riverine", 
-            "Alpenflage (Swiss)", "Rhodesian Brushstroke", 
-            // Modernized
-            "CADPAT TW (2001)", "DPM Tropical (Malaya)", 
-            "US 6-Color Desert (1991)"
+            "ERDL Pattern", "OG-107 Fatigues", "British DPM", 
+            "Canadian CADPAT TW", "M81 Woodland", "Desert Six-Color",
+            "Tiger Stripe (Vietnam)", "ALICE Harness", "Leibermuster (Reserve)",
+            "Italian Vegetato", "Greek Lizard"
         ],
         Soviet: [
-            "Berezka Autumn", "KLMK "Silver Leaf"", 
-            "VSR-93 "Dubok"", "TTsKO "Amoeba"", 
-            "Afghanka Mountain Variant", "Chinese Type 87", 
-            "East German Rain Drop", "Polish Wz.93 Pantera", 
-            "Yugoslav M89 Oak", "Cuban "Girasol""
+            "KlMK Camouflage", "TTsKO Butan", "KZS Suit", 
+            "Afghanka (Field)", "VSR-84 Flora", "Partizan Harness",
+            "Polish Pantera", "Czech Jehlici", "East German Strichtarn",
+            "Romanian IAR Camo", "Bulgarian Oakleaf"
         ]
     };
 
     const clothesStyle = {
         Western: [
-            "Canadian "Ranger" Tunic", "SAS "Jeans" Combat Pants", 
-            "French "Leopard" Jump Suit", "USMC "Mustang" Flightsuit", 
-            "Bundeswehr "Kampfjacke"", "ANZAC "Giggle Hat" Ensemble", 
-            "Rhodesian "Short Shorts" Kit", "SEAL "Tiger Stripe" Overalls"
+            "OG-107 Jungle Fatigues", "Battledress Uniform", 
+            "Desert Night Camo Parka", "SAS Windproof Smock",
+            "USMC Frogskin", "Bundeswehr Feldanzug", 
+            "Jump Jacket (Airborne)", "Nomex Flight Suit",
+            "Canadian Battle Dress", "French Tenue de Combat"
         ],
         Soviet: [
-            "MVD "Vitjaz" Assault Kit", "VDV "Telnyashka" Striped", 
-            "Spetsnaz "Krot" Recon Suit", "Afghan "Mujahideen" Trophy", 
-            "Cuban "Miliciano" Militia", "Polish "Desant" Smock", 
-            "Yugoslav Partisan Gear", "Angolan "FAPLA" Tropical"
+            "M88 Afghanka", "Gorka-1 Suit", "Telogreika Winter Gear",
+            "VDV Jump Uniform", "KLMK Overalls", 
+            "Border Guard Green", "Tanker Coveralls",
+            "Spetsnaz Mabuta", "Polish Moro", "Czech Vz.95"
         ]
     };
 
     const rocketLaunchers = {
         Western: {
-            LightAT: [
-                "M72A3 LAW", "RGW 60 (Germany)", 
-                "Instalaza C-90 (Spain)", "Mk 153 Mod 0 SMAW", 
-                "Armbrust (Disposable)", "M136 AT4 (1992)"
-            ],
-            HeavyAT: [
-                "M47 Dragon II", "Eryx (Franco-Canadian)", 
-                "Bofors AT4 CS", "Panzerfaust 3-T", 
-                "MATADOR (2000 Prototype)", "M40A1 Recoilless"
-            ]
+            LightAT: ["M72 LAW", "M20 Super Bazooka", "Panzerfaust 44",
+                    "Armbrust Disposable", "M18 Recoilless"],
+            HeavyAT: ["M47 Dragon", "Carl Gustaf M2", "BGM-71 TOW",
+                    "M40 Recoilless Rifle", "Swingfire (UK)"]
         },
         Soviet: {
-            LightAT: [
-                "RPG-76 Komar (Poland)", "Type 69 (China)", 
-                "RPG-18 "Mukha"", "RPG-22 "Netto"", 
-                "RPG-27 "Tavolga"", "RPG-30 "Kryuk""
-            ],
-            HeavyAT: [
-                "9M133 Kornet (1998)", "RPG-29 "Vampir"", 
-                "9K115-2 Metis-M", "SPG-9M "Spear"", 
-                "B-11 Recoilless", "Type 70 (Chinese RPG-7)"
-            ]
+            LightAT: ["RPG-18", "RPG-22", "RPG-26", "RPG-75"],
+            HeavyAT: ["RPG-7V2", "SPG-9", "9K115 Metis", "RPG-29"]
         }
     };
-</script>
+
+        function getRandomItem(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function generateLoadout() {
+            const faction = document.getElementById("faction").value;
+            const selectedClass = document.getElementById("class").value;
+
+            const helmet = getRandomItem(faction === "All" ? helmets.Western.concat(helmets.Soviet) : helmets[faction]);
+
+            // Add Light Rig for Tankers only
+            let bodyArmor = getRandomItem(faction === "All" ? armor.Western.concat(armor.Soviet) : armor[faction]);
+            if (selectedClass === "Tanker") {
+                bodyArmor = "Light Rig"; // Override for Tankers to use Light Rig
+            }
+
+            const primaryWeapon = getRandomItem(faction === "All" ? primaryWeapons.Western[selectedClass].concat(primaryWeapons.Soviet[selectedClass]) : primaryWeapons[faction][selectedClass]);
+            const secondaryWeapon = getRandomItem(faction === "All" ? secondaryWeapons.Western.concat(secondaryWeapons.Soviet) : secondaryWeapons[faction === "Western" ? "Western" : "Soviet"]);
+            const grenade = getRandomItem(faction === "All" ? grenades.Western.concat(grenades.Soviet) : grenades[faction]);
+            const gadget = getRandomItem(faction === "All" ? gadgets.Western.concat(gadgets.Soviet) : gadgets[faction]);
+
+            let rocketLauncher = '';
+            if (selectedClass === "Grenadier") {
+                rocketLauncher = getRandomItem(faction === "All" ? rocketLaunchers.Western.LightAT.concat(rocketLaunchers.Soviet.LightAT) : rocketLaunchers[faction].LightAT);
+            } else if (selectedClass === "AntiTank") {
+                rocketLauncher = getRandomItem(faction === "All" ? rocketLaunchers.Western.HeavyAT.concat(rocketLaunchers.Soviet.HeavyAT) : rocketLaunchers[faction].HeavyAT);
+            }
+
+            const camoUniform = getRandomItem(faction === "All" ? clothes.Western.concat(clothes.Soviet) : clothes[faction]);
+            const style = getRandomItem(faction === "All" ? clothesStyle.Western.concat(clothesStyle.Soviet) : clothesStyle[faction]);
+
+            document.getElementById("loadout").innerHTML = `
+                <h2>Your ${faction === "All" ? "Mixed Faction" : faction} ${selectedClass} Loadout:</h2>
+                <ul>
+                    <li><strong>Helmet:</strong> ${helmet}</li>
+                    <li><strong>Body Armor:</strong> ${bodyArmor}</li>
+                    <li><strong>Primary Weapon:</strong> ${primaryWeapon}</li>
+                    <li><strong>Secondary Weapon:</strong> ${secondaryWeapon}</li>
+                    <li><strong>Grenade:</strong> ${grenade}</li>
+                    <li><strong>Gadget:</strong> ${gadget}</li>
+                    ${rocketLauncher ? `<li><strong>Rocket Launcher:</strong> ${rocketLauncher}</li>` : ''}
+                    <li><strong>Camo Uniform:</strong> ${camoUniform}</li>
+                    <li><strong>Style of Clothes:</strong> ${style}</li>
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
