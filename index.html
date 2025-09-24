@@ -170,6 +170,13 @@
             color: #aaa;
             font-style: italic;
         }
+
+        .appearance-details {
+            background-color: #333;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -220,6 +227,14 @@
                     <option value="Recon">Recon</option>
                 </select>
             </div>
+
+            <div class="control-group">
+                <label for="gender">Choose Gender:</label><br>
+                <select id="gender">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
         </div>
 
         <div class="controls">
@@ -265,6 +280,73 @@
     <div id="loadout"></div>
 
 <script>
+    // Name banks organized by nationality and gender
+    const nameBank = {
+        Western: {
+            Male: {
+                firstNames: ["John", "James", "Robert", "Michael", "David", "Richard", "Thomas", "Christopher", "Daniel", "Matthew", "Anthony", "Donald", "Mark", "Paul", "Steven", "Kenneth", "Andrew", "Joshua", "Kevin", "Brian", "George", "Edward", "Ronald", "Timothy", "Jason", "Jeffrey", "Ryan", "Jacob", "Gary", "Nicholas", "Eric", "Jonathan", "Stephen", "Larry", "Justin", "Scott", "Brandon", "Frank", "Gregory", "Raymond", "Alexander", "Patrick", "Jack", "Dennis", "Jerry", "Tyler", "Aaron", "Henry", "Douglas", "Nathan", "Peter", "Zachary", "Kyle", "William", "Carlos", "Arthur", "Warren", "Jose", "Philip", "Mason", "Louis"],
+                lastNames: ["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson", "Martinez", "Anderson", "Taylor", "Thomas", "Hernandez", "Moore", "Martin", "Jackson", "Thompson", "White", "Lopez", "Lee", "Gonzalez", "Harris", "Clark", "Lewis", "Robinson", "Walker", "Perez", "Hall", "Young", "Allen", "Sanchez", "Wright", "King", "Scott", "Green", "Baker", "Adams", "Nelson", "Hill", "Ramirez", "Campbell", "Mitchell", "Roberts", "Carter", "Phillips", "Evans", "Turner", "Torres", "Parker", "Collins", "Edwards", "Stewart", "Flores", "Morris", "Nguyen", "Murphy", "Rivera", "Cook", "Rogers", "Morgan", "Peterson", "Cooper", "Reed", "Bailey", "Howard", "Ramos", "Kim", "Cox", "Ward", "Richardson", "Watson", "Brooks", "Chavez", "Wood", "James", "Bennett", "Gray", "Mendoza", "Ruiz", "Hughes", "Price", "Alvarez", "Castillo", "Sanders", "Patel", "Myers", "Long", "Ross", "Foster", "Jimenez"]
+            },
+            Female: {
+                firstNames: ["Mary", "Patricia", "Jennifer", "Linda", "Elizabeth", "Barbara", "Susan", "Jessica", "Sarah", "Karen", "Nancy", "Lisa", "Betty", "Helen", "Sandra", "Donna", "Carol", "Ruth", "Sharon", "Michelle", "Laura", "Sarah", "Kimberly", "Deborah", "Dorothy", "Lisa", "Nancy", "Karen", "Betty", "Helen", "Sandra", "Donna", "Carol", "Ruth", "Sharon", "Michelle", "Laura", "Sarah", "Kimberly", "Deborah", "Dorothy", "Amy", "Angela", "Ashley", "Brenda", "Emma", "Olivia", "Cynthia", "Marie", "Janet", "Catherine", "Frances", "Christine", "Samantha", "Debra", "Rachel", "Carolyn", "Janet", "Virginia", "Maria", "Heather", "Diane", "Julie", "Joyce", "Victoria", "Kelly", "Christina", "Joan", "Evelyn", "Lauren", "Judith", "Megan", "Cheryl", "Andrea", "Hannah", "Jacqueline", "Martha", "Gloria", "Sara", "Janice", "Julia", "Marie", "Madison", "Mackenzie", "Amber", "Rachel", "Claire", "Samantha", "Diana", "Grace", "Sara", "Brittany", "Danielle", "Alexis", "Kathryn", "Lori", "Rose"],
+                lastNames: ["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller", "Davis", "Garcia", "Rodriguez", "Wilson", "Martinez", "Anderson", "Taylor", "Thomas", "Hernandez", "Moore", "Martin", "Jackson", "Thompson", "White", "Lopez", "Lee", "Gonzalez", "Harris", "Clark", "Lewis", "Robinson", "Walker", "Perez", "Hall", "Young", "Allen", "Sanchez", "Wright", "King", "Scott", "Green", "Baker", "Adams", "Nelson", "Hill", "Ramirez", "Campbell", "Mitchell", "Roberts", "Carter", "Phillips", "Evans", "Turner", "Torres", "Parker", "Collins", "Edwards", "Stewart", "Flores", "Morris", "Nguyen", "Murphy", "Rivera", "Cook", "Rogers", "Morgan", "Peterson", "Cooper", "Reed", "Bailey", "Howard", "Ramos", "Kim", "Cox", "Ward", "Richardson", "Watson", "Brooks", "Chavez", "Wood", "James", "Bennett", "Gray", "Mendoza", "Ruiz", "Hughes", "Price", "Alvarez", "Castillo", "Sanders", "Patel", "Myers", "Long", "Ross", "Foster", "Jimenez"]
+            }
+        },
+        Soviet: {
+            Male: {
+                firstNames: ["Ivan", "Dmitri", "Sergei", "Alexei", "Viktor", "Nikolai", "Mikhail", "Vladimir", "Andrei", "Yuri", "Boris", "Pavel", "Anatoly", "Oleg", "Vasily", "Alexander", "Leonid", "Fyodor", "Georgi", "Konstantin", "Maxim", "Roman", "Artyom", "Anton", "Denis", "Evgeny", "Ilya", "Kirill", "Makar", "Nikita", "Pyotr", "Ruslan", "Stanislav", "Timur", "Valentin", "Yegor", "Zakhar", "Alexey", "Bogdan", "Danila", "Erik", "Fedor", "Gleb", "Igor", "Jaroslav", "Kazimir", "Lev", "Mark", "Oskar", "Platon", "Robert", "Slava", "Taras", "Ulrich", "Vadim", "Yaropolk", "Zinovy"],
+                lastNames: ["Ivanov", "Petrov", "Sidorov", "Smirnov", "Kuznetsov", "Popov", "Volkov", "Sokolov", "Lebedev", "Kozlov", "Novikov", "Morozov", "Orlov", "Andreev", "Makarov", "Fedorov", "Mikhailov", "Sergeev", "Stepanov", "Yakovlev", "Solovyov", "Borisov", "Alexandrov", "Dmitriev", "Komarov", "Pavlov", "Grigoriev", "Lazarev", "Medvedev", "Nikitin", "Romanov", "Vinogradov", "Kovalev", "Belov", "Tarasov", "Belyaev", "Orlov", "Vasiliev", "Frolov", "Nikolaev", "Krylowski", "Zhivago", "Donskoy", "Volga", "Baryshnikov", "Chekhov", "Dostoyevsky", "Gagarin", "Khrushchev", "Lenin", "Molotov", "Rasputin", "Stalin", "Tolstoy", "Trotsky", "Zhukov"]
+            },
+            Female: {
+                firstNames: ["Anya", "Katya", "Nastya", "Svetlana", "Olga", "Irina", "Elena", "Natasha", "Galina", "Tatyana", "Marina", "Lyudmila", "Valentina", "Nina", "Raisa", "Larisa", "Vera", "Tamara", "Lyubov", "Zoya", "Anna", "Maria", "Nadezhda", "Antonina", "Klavdiya", "Rosa", "Zinaida", "Polina", "Marfa", "Praskovya", "Evdokiya", "Fekla", "Matryona", "Darya", "Akulina", "Agafya", "Pelagya", "Efrosinya", "Mariya", "Oksana", "Yulia", "Kristina", "Alina", "Kira", "Zhanna", "Alla", "Rimma", "Inga", "Lilia", "Anzhelika", "Veronika", "Regina", "Diana", "Margarita", "Albina", "Elvira", "Nelli", "Stella", "Emiliya", "Emma", "Elza", "Violetta", "Zhanneta", "Evelina", "Adelina", "Kamilla", "Milena", "Snezhana", "Angelina", "Vladislava", "Elizaveta", "Anastasiya", "Aleksandra", "Viktoria"],
+                lastNames: ["Ivanova", "Petrova", "Sidorova", "Smirnova", "Kuznetsova", "Popova", "Volkova", "Sokolova", "Lebedeva", "Kozlova", "Novikova", "Morozova", "Orlova", "Andreeva", "Makarova", "Fedorova", "Mikhailova", "Sergeeva", "Stepanova", "Yakovleva", "Solovyova", "Borisova", "Alexandrova", "Dmitrieva", "Komarova", "Pavlova", "Grigorieva", "Lazareva", "Medvedeva", "Nikitina", "Romanova", "Vinogradova", "Kovaleva", "Belova", "Tarasova", "Belyaeva", "Orlova", "Vasilieva", "Frolova", "Nikolaeva", "Krylovskaya", "Zhivago", "Donskaya", "Volga", "Baryshnikova", "Chekhova", "Dostoyevskaya", "Gagarina", "Khrushcheva", "Lenin", "Molotova", "Rasputina", "Stalina", "Tolstoya", "Trotskaya", "Zhukova"]
+            }
+        },
+        Mercenary: {
+            Male: {
+                firstNames: ["Axel", "Blaze", "Cole", "Dante", "Edge", "Fox", "Ghost", "Hunter", "Jax", "Kane", "Lance", "Max", "Nick", "Oz", "Pike", "Rex", "Steel", "Tank", "Viper", "Wolf", "Zane", "Ace", "Bash", "Crow", "Duke", "Falcon", "Gunner", "Hawk", "Iron", "Jet", "Knox", "Lynx", "Mace", "Nash", "Onyx", "Phoenix", "Quinn", "Raven", "Spike", "Titan", "Venom", "Wraith", "Xerxes", "York", "Zeus", "Bear", "Colt", "Dagger", "Echo", "Frost", "Grim", "Havoc", "Ice", "Jinx", "Kilo", "Lash"],
+                lastNames: ["Black", "Stone", "Steel", "Iron", "Wolf", "Fox", "Hawk", "Raven", "Cross", "Sharp", "Quick", "Storm", "Flame", "Frost", "Shadow", "Hunter", "Ranger", "Striker", "Viper", "Reaper", "Ghost", "Phantom", "Blade", "Edge", "Pierce", "Savage", "Wild", "Crimson", "Scarlet", "Silver", "Gold", "Diamond", "Thunder", "Lightning", "Tornado", "Hurricane", "Blizzard", "Avalanche", "Earthquake", "Tsunami", "Volcano", "Meteor", "Comet", "Star", "Galaxy", "Universe", "Cosmos", "Nebula", "Pulsar", "Quasar", "Supernova", "Blackhole", "Wormhole", "Portal", "Dimension"]
+            },
+            Female: {
+                firstNames: ["Aria", "Blaze", "Cora", "Diana", "Echo", "Faye", "Grace", "Hana", "Iris", "Jade", "Kira", "Luna", "Maya", "Nova", "Onyx", "Phoenix", "Quinn", "Raven", "Sage", "Tara", "Uma", "Vera", "Wren", "Xara", "Yara", "Zara", "Angel", "Belle", "Cleo", "Dawn", "Eve", "Faith", "Gaia", "Hope", "Ivy", "Joy", "Kate", "Lux", "Mira", "Nyx", "Opal", "Piper", "Rain", "Star", "Vale", "Willow", "Xena", "Yin", "Zen", "Azure", "Crimson", "Delta", "Ember", "Frost", "Glow"],
+                lastNames: ["Black", "Stone", "Steel", "Iron", "Wolf", "Fox", "Hawk", "Raven", "Cross", "Sharp", "Quick", "Storm", "Flame", "Frost", "Shadow", "Hunter", "Ranger", "Striker", "Viper", "Reaper", "Ghost", "Phantom", "Blade", "Edge", "Pierce", "Savage", "Wild", "Crimson", "Scarlet", "Silver", "Gold", "Diamond", "Thunder", "Lightning", "Tornado", "Hurricane", "Blizzard", "Avalanche", "Earthquake", "Tsunami", "Volcano", "Meteor", "Comet", "Star", "Galaxy", "Universe", "Cosmos", "Nebula", "Pulsar", "Quasar", "Supernova", "Blackhole", "Wormhole", "Portal", "Dimension"]
+            }
+        },
+        Insurgent: {
+            Male: {
+                firstNames: ["Ahmed", "Muhammad", "Ali", "Hassan", "Omar", "Yusuf", "Ibrahim", "Ismail", "Abdullah", "Abdul Rahman", "Khalid", "Mahmoud", "Rashid", "Tariq", "Salim", "Hamza", "Bilal", "Usman", "Zakariya", "Marwan", "Nasser", "Faisal", "Saeed", "Adnan", "Waleed", "Zaid", "Karim", "Majid", "Sami", "Tamer", "Fahd", "Rami", "Sherif", "Wael", "Amjad", "Bassam", "Ghassan", "Hani", "Jamal", "Karam", "Laith", "Mazen", "Nabeel", "Osama", "Qasim", "Raed", "Samir", "Talal", "Usama", "Waseem", "Yasser", "Ziyad", "Aziz", "Badr", "Daud", "Emad"],
+                lastNames: ["Al-Rashid", "Al-Mahmoud", "Al-Hassan", "Al-Ahmad", "Al-Ali", "Al-Omar", "Al-Ibrahim", "Al-Khalil", "Al-Nasser", "Al-Mansour", "Al-Sabah", "Al-Thani", "Al-Maktoum", "Al-Saud", "Al-Hashemi", "Al-Qasimi", "Al-Nahyan", "Al-Sabah", "Bin Laden", "Bin Rashid", "Bin Ahmad", "Bin Ali", "Bin Omar", "Bin Hassan", "Ibn Sina", "Ibn Khaldun", "Ibn Battuta", "Ibn Rushd", "Ibn Taymiyyah", "Abu Bakr", "Abu Omar", "Abu Ahmad", "Abu Ali", "Abu Hassan", "Abu Yusuf", "Abu Ibrahim", "Abu Abdullah", "Abu Rahman", "Abu Khalil", "Abu Nasser", "Abu Mansour", "Abu Sabah", "Abu Thani", "Abu Maktoum", "Abu Saud", "Abu Hashemi", "Abu Qasimi", "Abu Nahyan", "Abu Sabah"]
+            },
+            Female: {
+                firstNames: ["Fatima", "Aisha", "Khadija", "Zainab", "Maryam", "Hafsa", "Ruqayya", "Umm Kulthum", "Asma", "Safiya", "Juwayriya", "Maymuna", "Sawda", "Zaynab", "Hind", "Layla", "Sumayyah", "Khawla", "Nusaybah", "Umm Salama", "Umm Habiba", "Ramlah", "Saffiya", "Haleema", "Barakah", "Thuwaybah", "Halimah", "Aminah", "Hawwa", "Sarah", "Hajar", "Asiyah", "Mariam", "Khadijah", "Aishah", "Zaynab", "Ruqayyah", "Umm Kulthum", "Fatimah", "Sakinah", "Sukainah", "Zubaidah", "Rabia", "Shuhda", "Umm Waraqa", "Khansa", "Umm Anmar", "Hamnah", "Salma", "Najla", "Widad", "Soraya", "Samira", "Leila", "Nadia"],
+                lastNames: ["Al-Rashida", "Al-Mahmoud", "Al-Hassan", "Al-Ahmad", "Al-Ali", "Al-Omar", "Al-Ibrahim", "Al-Khalil", "Al-Nasser", "Al-Mansour", "Al-Sabah", "Al-Thani", "Al-Maktoum", "Al-Saud", "Al-Hashemi", "Al-Qasimi", "Al-Nahyan", "Al-Sabah", "Bint Laden", "Bint Rashid", "Bint Ahmad", "Bint Ali", "Bint Omar", "Bint Hassan", "Ibn Sina", "Ibn Khaldun", "Ibn Battuta", "Ibn Rushd", "Ibn Taymiyyah", "Abu Bakr", "Abu Omar", "Abu Ahmad", "Abu Ali", "Abu Hassan", "Abu Yusuf", "Abu Ibrahim", "Abu Abdullah", "Abu Rahman", "Abu Khalil", "Abu Nasser", "Abu Mansour", "Abu Sabah", "Abu Thani", "Abu Maktoum", "Abu Saud", "Abu Hashemi", "Abu Qasimi", "Abu Nahyan", "Abu Sabah"]
+            }
+        }
+    };
+
+    // Physical appearance generation
+    const appearanceTraits = {
+        Male: {
+            height: ["5'6\"", "5'7\"", "5'8\"", "5'9\"", "5'10\"", "5'11\"", "6'0\"", "6'1\"", "6'2\"", "6'3\""],
+            build: ["lean", "athletic", "stocky", "muscular", "lanky", "compact", "robust", "wiry", "broad-shouldered", "barrel-chested"],
+            eyeColor: ["brown", "blue", "green", "hazel", "dark brown", "light blue", "gray", "amber"],
+            hairColor: ["black", "dark brown", "brown", "light brown", "blonde", "dirty blonde", "red", "auburn", "gray", "salt-and-pepper"],
+            hairStyle: ["short military cut", "buzz cut", "crew cut", "close-cropped", "slightly wavy", "straight", "curly", "receding", "balding", "shaved head"],
+            facialHair: ["clean-shaven", "mustache", "goatee", "full beard", "stubble", "sideburns", "soul patch", "van dyke", "handlebar mustache"],
+            complexion: ["fair", "olive", "tan", "dark", "pale", "ruddy", "weathered", "sun-kissed", "freckled"],
+            distinguishingFeatures: ["scar on cheek", "crooked nose", "prominent jaw", "piercing eyes", "thick eyebrows", "dimpled chin", "high cheekbones", "square jaw", "cleft chin", "battle scars", "tattoo on arm", "missing tooth", "weathered hands", "calloused fingers"]
+        },
+        Female: {
+            height: ["5'2\"", "5'3\"", "5'4\"", "5'5\"", "5'6\"", "5'7\"", "5'8\"", "5'9\"", "5'10\""],
+            build: ["petite", "athletic", "slender", "curvy", "lean", "compact", "statuesque", "willowy", "strong", "graceful"],
+            eyeColor: ["brown", "blue", "green", "hazel", "dark brown", "light blue", "gray", "amber"],
+            hairColor: ["black", "dark brown", "brown", "light brown", "blonde", "dirty blonde", "red", "auburn", "strawberry blonde"],
+            hairStyle: ["short bob", "pixie cut", "shoulder-length", "long and straight", "wavy", "curly", "ponytail", "braided", "military regulation short", "tightly pulled back"],
+            complexion: ["fair", "olive", "tan", "dark", "pale", "rosy", "sun-kissed", "freckled", "smooth"],
+            distinguishingFeatures: ["bright smile", "sharp eyes", "high cheekbones", "defined jawline", "expressive eyebrows", "small scar", "tattoo", "pierced ears", "strong hands", "graceful movements", "confident posture", "keen gaze", "determined expression"]
+        }
+    };
+
     // Expanded Modern Era Equipment
     const modernHelmets = {
         Western: [
@@ -579,7 +661,7 @@
             "Former Soldier", "Civilian Turned Fighter", "Student Protestor",
             "Farmers' Militia", "Urban Guerrilla", "Mountain Fighter"
         ]
-};
+    };
 
     const specialties = {
         Urban: ["CQB Specialist", "Room Clearing Expert", "Urban Sniper"],
@@ -594,6 +676,50 @@
     // Function to get random item from array
     function getRandomItem(arr) {
         return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    // Function to generate appearance description
+    function generateAppearance(gender, faction) {
+        const traits = appearanceTraits[gender];
+        const height = getRandomItem(traits.height);
+        const build = getRandomItem(traits.build);
+        const eyeColor = getRandomItem(traits.eyeColor);
+        const hairColor = getRandomItem(traits.hairColor);
+        const hairStyle = getRandomItem(traits.hairStyle);
+        const complexion = getRandomItem(traits.complexion);
+        const distinguishing = getRandomItem(traits.distinguishingFeatures);
+        
+        let description = `Standing at ${height} with a ${build} build, this soldier has ${eyeColor} eyes and ${hairColor} hair worn in a ${hairStyle}. `;
+        description += `Their ${complexion} complexion shows signs of field experience, and they are notably recognized by their ${distinguishing}. `;
+        
+        if (gender === "Male") {
+            const facialHair = getRandomItem(traits.facialHair);
+            description += `They maintain a ${facialHair} appearance that fits military standards.`;
+        } else {
+            description += `They carry themselves with a confident and professional demeanor.`;
+        }
+        
+        return description;
+    }
+
+    // Function to generate a random name based on faction and gender
+    function generateRandomName(faction, gender) {
+        let nameFaction = faction;
+        if (faction === "All") {
+            nameFaction = getRandomItem(["Western", "Soviet"]);
+        }
+        
+        const names = nameBank[nameFaction];
+        if (!names || !names[gender]) {
+            // Fallback to Western names if faction doesn't exist
+            const firstName = getRandomItem(nameBank.Western[gender].firstNames);
+            const lastName = getRandomItem(nameBank.Western[gender].lastNames);
+            return `${firstName} ${lastName}`;
+        }
+        
+        const firstName = getRandomItem(names[gender].firstNames);
+        const lastName = getRandomItem(names[gender].lastNames);
+        return `${firstName} ${lastName}`;
     }
 
     // Function to generate a callsign
@@ -637,22 +763,19 @@
                         "AntiTank", "Tanker", "Medic", "Engineer", "Recon"];
         const specializations = ["Standard", "Urban", "Woodland", "Desert", 
                                 "Arctic", "NightOps", "Airborne", "Maritime"];
+        const genders = ["Male", "Female"];
+        
+        const selectedFaction = getRandomItem(factions);
+        const selectedGender = getRandomItem(genders);
         
         document.getElementById("era").value = getRandomItem(eras);
-        document.getElementById("faction").value = getRandomItem(factions);
+        document.getElementById("faction").value = selectedFaction;
         document.getElementById("class").value = getRandomItem(classes);
         document.getElementById("specialization").value = getRandomItem(specializations);
+        document.getElementById("gender").value = selectedGender;
         
-        // Generate a random name
-        const firstNames = ["John", "James", "Robert", "Michael", "David", "Richard", 
-                           "Alex", "Chris", "Mark", "Paul", "Ivan", "Dmitri", "Sergei",
-                           "Hans", "Karl", "Friedrich", "Mohammed", "Ahmed", "Hassan"];
-        const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Miller",
-                          "Davis", "Wilson", "Anderson", "Taylor", "Ivanov", "Petrov",
-                          "Sidorov", "Kuznetsov", "Schmidt", "Müller", "Weber", "Khan"];
-        
-        document.getElementById("characterName").value = 
-            `${getRandomItem(firstNames)} ${getRandomItem(lastNames)}`;
+        // Generate a random name based on faction and gender
+        document.getElementById("characterName").value = generateRandomName(selectedFaction, selectedGender);
         
         generateLoadout();
     }
@@ -665,19 +788,23 @@
             return;
         }
         
-        const savedLoadouts = JSON.parse(localStorage.getItem("savedLoadouts") || "[]");
+        // Use in-memory storage instead of localStorage for Claude.ai compatibility
+        if (!window.savedLoadoutsData) {
+            window.savedLoadoutsData = [];
+        }
+        
         const loadoutData = {
             name: document.getElementById("characterName").value || "Unnamed Soldier",
             era: document.getElementById("era").value,
             faction: document.getElementById("faction").value,
             class: document.getElementById("class").value,
             specialization: document.getElementById("specialization").value,
+            gender: document.getElementById("gender").value,
             html: loadoutElement.innerHTML,
             timestamp: new Date().toLocaleString()
         };
         
-        savedLoadouts.push(loadoutData);
-        localStorage.setItem("savedLoadouts", JSON.stringify(savedLoadouts));
+        window.savedLoadoutsData.push(loadoutData);
         
         alert("Character saved!");
         displaySavedLoadouts();
@@ -685,7 +812,7 @@
 
     // Function to display saved loadouts
     function displaySavedLoadouts() {
-        const savedLoadouts = JSON.parse(localStorage.getItem("savedLoadouts") || "[]");
+        const savedLoadouts = window.savedLoadoutsData || [];
         const container = document.getElementById("savedLoadouts");
         
         if (savedLoadouts.length === 0) {
@@ -695,7 +822,7 @@
         
         container.innerHTML = savedLoadouts.map((loadout, index) => `
             <div class="loadout-item" onclick="loadSavedLoadout(${index})">
-                <strong>${loadout.name}</strong> - ${loadout.era} ${loadout.faction} ${loadout.class}<br>
+                <strong>${loadout.name}</strong> - ${loadout.gender} ${loadout.era} ${loadout.faction} ${loadout.class}<br>
                 <small>Saved: ${loadout.timestamp}</small>
             </div>
         `).join("");
@@ -703,7 +830,7 @@
 
     // Function to load a saved loadout
     function loadSavedLoadout(index) {
-        const savedLoadouts = JSON.parse(localStorage.getItem("savedLoadouts") || "[]");
+        const savedLoadouts = window.savedLoadoutsData || [];
         if (index >= 0 && index < savedLoadouts.length) {
             const loadout = savedLoadouts[index];
             document.getElementById("characterName").value = loadout.name;
@@ -711,20 +838,27 @@
             document.getElementById("faction").value = loadout.faction;
             document.getElementById("class").value = loadout.class;
             document.getElementById("specialization").value = loadout.specialization;
+            document.getElementById("gender").value = loadout.gender || "Male";
             document.getElementById("loadout").innerHTML = loadout.html;
             openTab(event, 'Generator');
         }
     }
 
     // Function to generate OC details
-    function generateOCDetails(faction, specialization, className, characterName) {
+    function generateOCDetails(faction, specialization, className, characterName, gender) {
         const callsign = generateCallsign();
         const backstory = generateBackstory(faction, specialization, className);
+        const appearance = generateAppearance(gender, faction);
         
         return `
             <div class="oc-details">
                 <h3>${characterName || "Unnamed Soldier"} - "${callsign}"</h3>
                 <div class="character-image">Character Portrait</div>
+                <div class="appearance-details">
+                    <h4>Physical Appearance:</h4>
+                    <p>${appearance}</p>
+                </div>
+                <p><strong>Gender:</strong> ${gender}</p>
                 <p><strong>Background:</strong> ${backstory}</p>
                 <p><strong>Specialization:</strong> ${specialization} Operations</p>
                 <p><strong>Role:</strong> ${className}</p>
@@ -743,28 +877,23 @@
         const selectedClass = document.getElementById("class").value;
         const specialization = document.getElementById("specialization").value;
         const characterName = document.getElementById("characterName").value;
+        const gender = document.getElementById("gender").value;
 
         // Equipment pools based on era
-        let helmetsPool, armorPool, primaryWeaponsPool, secondaryWeaponsPool, 
-            grenadesPool, gadgetsPool, clothesPool, clothesStylePool, rocketLaunchersPool;
+        let helmetsPool, armorPool, primaryWeaponsPool;
 
         if (era === "Modern") {
             helmetsPool = modernHelmets;
             armorPool = modernArmor;
             primaryWeaponsPool = modernPrimaryWeapons;
-            // ... (other modern equipment)
         } else if (era === "NearFuture") {
-            helmetsPool = nearFutureHelmets;
+            helmetsPool = modernHelmets; // Use modern helmets for now
             armorPool = nearFutureArmor;
-            // Use modern weapons for near future for now
+            primaryWeaponsPool = modernPrimaryWeapons; // Use modern weapons for now
+        } else { // WW2 - would need WW2 equipment defined
+            helmetsPool = modernHelmets; // Fallback to modern for now
+            armorPool = modernArmor;
             primaryWeaponsPool = modernPrimaryWeapons;
-            // ... (other near future equipment)
-        } else { // WW2
-            // Use existing WW2 equipment
-            helmetsPool = ww2Helmets;
-            armorPool = ww2Armor;
-            primaryWeaponsPool = ww2PrimaryWeapons;
-            // ... (other WW2 equipment)
         }
 
         // Generate loadout items
@@ -792,19 +921,31 @@
             primaryWeaponsPool.Western[selectedClass]
         );
 
-        // Generate other equipment (secondary, grenades, etc.)
-        // ... (rest of equipment generation)
+        // Generate secondary weapon
+        const secondaryWeapons = ["M1911", "Glock 17", "Beretta M9", "SIG P226", "Makarov PM", "Tokarev TT-33", "CZ 75", "Walther P38"];
+        const secondaryWeapon = getRandomItem(secondaryWeapons);
+
+        // Generate grenades
+        const grenades = ["M67 Frag", "M84 Stun", "M18 Smoke", "RGD-5", "F1 Grenade", "Flashbang", "Smoke Grenade"];
+        const grenade = getRandomItem(grenades);
+
+        // Generate final character name if empty
+        const finalName = characterName || generateRandomName(faction, gender);
 
         // Generate OC details
-        const ocDetails = generateOCDetails(faction, specialization, selectedClass, characterName);
+        const ocDetails = generateOCDetails(faction, specialization, selectedClass, finalName, gender);
 
         // Display the loadout
         document.getElementById("loadout").innerHTML = `
-            <h2>${characterName ? characterName + "'s" : "Your"} ${era} ${faction === "All" ? "Mixed Faction" : faction} ${selectedClass} Loadout:</h2>
+            <h2>${finalName}'s ${era} ${faction === "All" ? "Mixed Faction" : faction} ${selectedClass} Loadout:</h2>
             <ul>
+                <li><strong>Name:</strong> ${finalName}</li>
+                <li><strong>Gender:</strong> ${gender}</li>
                 <li><strong>Helmet:</strong> ${helmet}</li>
                 <li><strong>Body Armor:</strong> ${bodyArmor}</li>
                 <li><strong>Primary Weapon:</strong> ${primaryWeapon}</li>
+                <li><strong>Secondary Weapon:</strong> ${secondaryWeapon}</li>
+                <li><strong>Grenades:</strong> ${grenade}</li>
                 <li><strong>Specialization:</strong> ${specialization}</li>
             </ul>
             ${ocDetails}
@@ -821,5 +962,3 @@
 </script>
 </body>
 </html>
-
-
