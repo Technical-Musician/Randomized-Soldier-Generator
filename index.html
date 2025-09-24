@@ -922,12 +922,32 @@
         );
 
         // Generate secondary weapon
-        const secondaryWeapons = ["M1911", "Glock 17", "Beretta M9", "SIG P226", "Makarov PM", "Tokarev TT-33", "CZ 75", "Walther P38"];
-        const secondaryWeapon = getRandomItem(secondaryWeapons);
+        const secondaryWeapons = {
+            Western: ["M1911", "Glock 17", "Beretta M9", "SIG P226", "CZ 75", "Walther P38", "Smith & Wesson M&P", "HK USP", "FN Five-seveN"],
+            Soviet: ["Makarov PM", "Tokarev TT-33", "Stechkin APS", "PSM Pistol", "MP-443 Grach", "GSh-18", "PYa Pistol"],
+            Mercenary: ["Glock 19", "SIG P320", "HK VP9", "Beretta M9A3", "1911 Tactical", "Desert Eagle", "CZ P-10", "Smith & Wesson M&P"],
+            Insurgent: ["Tokarev TT-33", "Makarov PM", "Captured M9", "CZ 52", "Nagant M1895", "Improvised Pistol", "No Secondary", "Hunting Pistol"]
+        };
+        
+        const secondaryWeapon = getRandomItem(
+            faction === "All" ? 
+            secondaryWeapons.Western.concat(secondaryWeapons.Soviet) : 
+            secondaryWeapons[faction] || secondaryWeapons.Western
+        );
 
         // Generate grenades
-        const grenades = ["M67 Frag", "M84 Stun", "M18 Smoke", "RGD-5", "F1 Grenade", "Flashbang", "Smoke Grenade"];
-        const grenade = getRandomItem(grenades);
+        const grenades = {
+            Western: ["M67 Frag", "M84 Stun", "M18 Smoke", "AN-M14 Incendiary", "Flashbang", "CS Gas Grenade", "M34 White Phosphorus"],
+            Soviet: ["RGD-5", "F1 Grenade", "RDG-2X Smoke", "RGN Hand Grenade", "RGO Hand Grenade", "Smoke Grenade"],
+            Mercenary: ["M67 Frag", "M84 Stun", "Flashbang", "Smoke Grenade", "Mixed Grenades", "Commercial Flashbang", "Tear Gas"],
+            Insurgent: ["RGD-5", "F1 Grenade", "Improvised Explosive", "Molotov Cocktail", "Captured M67", "Homemade Grenade", "No Grenades"]
+        };
+        
+        const grenade = getRandomItem(
+            faction === "All" ? 
+            grenades.Western.concat(grenades.Soviet) : 
+            grenades[faction] || grenades.Western
+        );
 
         // Generate final character name if empty
         const finalName = characterName || generateRandomName(faction, gender);
@@ -962,5 +982,6 @@
 </script>
 </body>
 </html>
+
 
 
